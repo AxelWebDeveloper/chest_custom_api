@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  mysql_container_chest_test:
+    platform: linux/x86_64
+    image: mysql:5.7
+    environment: # Credentials must differ from the main database in order to avoid what we call in France "Programmation par coïncidence"
+      - MYSQL_DATABASE=test_chest_db
+      - MYSQL_USER=test_user_chest
+      - MYSQL_PASSWORD=chest
+      - MYSQL_ROOT_PASSWORD=AIACod4g3TestRoot
+    ports:
+      - '1614:3306'
+
+  mysql_container_chest_local:
+    image: mysql:5.7
+    platform: linux/x86_64
+    environment: # Credentials must differ from the main database in order to avoid what we call in France "Programmation par coïncidence"
+      - MYSQL_DATABASE=local_chest_db
+      - MYSQL_USER=test_user_chest
+      - MYSQL_PASSWORD=chest
+      - MYSQL_ROOT_PASSWORD=AIACod4g3Root
+    ports:
+      - '1615:3306'
+
+volumes:
+  mysql_container_aia_local:
