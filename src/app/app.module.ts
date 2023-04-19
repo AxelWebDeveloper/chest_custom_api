@@ -10,10 +10,14 @@ import { InjectUser } from 'src/middlewares/injectUser';
 import { AuthModule } from 'src/module/auth/auth.module';
 import { JwtStrategy } from 'src/module/auth/jwt.strategy';
 import { UsersModule } from 'src/module/users/users.module';
+import configuration from 'src/config/configuration';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      load: [configuration],
+      envFilePath: ['.env'],
+    }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'mysql',
