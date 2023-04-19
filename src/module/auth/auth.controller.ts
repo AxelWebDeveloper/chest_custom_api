@@ -1,5 +1,14 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AuthConfirmPasswordUserDto } from './dto/auth-confirm-reset-password.dto';
+import { AuthForgotPasswordUserDto } from './dto/auth-reset-password-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -36,5 +45,23 @@ export class AuthController {
     } catch (e) {
       throw new BadRequestException(e.message);
     }
+  }
+
+  @Post('/forgot-password')
+  @UsePipes(ValidationPipe)
+  async forgotPassword(
+    @Body() authForgotPasswordUserDto: AuthForgotPasswordUserDto,
+  ) {
+    return await this.authService.forgotUserPassword(authForgotPasswordUserDto);
+  }
+
+  @Post('/confirm-password')
+  @UsePipes(ValidationPipe)
+  async confirmPassword(
+    @Body() authConfirmPasswordUserDto: AuthConfirmPasswordUserDto,
+  ) {
+    return await this.authService.confirmUserPassword(
+      authConfirmPasswordUserDto,
+    );
   }
 }
