@@ -11,6 +11,7 @@ import { AuthModule } from 'src/module/auth/auth.module';
 import { JwtStrategy } from 'src/module/auth/jwt.strategy';
 import { UsersModule } from 'src/module/users/users.module';
 import configuration from 'src/config/configuration';
+import { SocketModule } from '../socket/socket.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import configuration from 'src/config/configuration';
     }),
     UsersModule,
     AuthModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy, RolesGuard],
