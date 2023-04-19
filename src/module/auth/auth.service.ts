@@ -8,6 +8,8 @@ import {
 } from 'amazon-cognito-identity-js';
 import { UsersService } from '../users/users.service';
 import { AuthConfig } from './auth.config';
+import { AuthConfirmPasswordUserDto } from './dto/auth-confirm-reset-password.dto';
+import { AuthForgotPasswordUserDto } from './dto/auth-reset-password-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -101,6 +103,54 @@ export class AuthService {
           }
         },
       );
+    });
+  }
+
+  async forgotUserPassword(
+    authForgotPasswordUserDto: AuthForgotPasswordUserDto,
+  ) {
+    const { email } = authForgotPasswordUserDto;
+
+    const userData = {
+      Username: email,
+      Pool: this.userPool,
+    };
+
+    const userCognito = new CognitoUser(userData);
+
+    return new Promise((resolve, reject) => {
+      userCognito.forgotPassword({
+        onSuccess: (result) => {
+          resolve(result);
+        },
+        onFailure: (err) => {
+          reject(err);
+        },
+      });
+    });
+  }
+
+  async confirmUserPassword(
+    authConfirmPasswordUserDto: AuthConfirmPasswordUserDto,
+  ) {
+    const { email, confirmationCode, newPassword } = authConfirmPasswordUserDto;
+
+    const userData = {
+      Username: email,
+      Pool: this.userPool,
+    };
+
+    const userCognito = new CognitoUser(userData);
+
+    return new Promise((resolve, reject) => {
+      userCognito.confirmPassword(confirmationCode, newPassword, {
+        onSuccess: () => {
+          resolve({ status: 'success' });
+        },
+        onFailure: (err) => {
+          reject(err);
+        },
+      });
     });
   }
 }
