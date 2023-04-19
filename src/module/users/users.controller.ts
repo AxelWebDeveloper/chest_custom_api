@@ -47,6 +47,10 @@ export class UsersController {
   findCurrentUser(@Req() req: AuthenticatedRequest) {
     if (!req.uuid) throw noFirebasseUUID();
     if (!req.user) throw noUserExistsHttpException();
+    console.log(
+      '🚀 ~ file: users.controller.ts:57 ~ UsersController ~ findCurrentUser ~ process.env.TYPEORM_USERNAME:',
+      process.env.TYPEORM_USERNAME,
+    );
 
     try {
       return this.usersService.getUserInfoFromAuthenticationId(req.uuid);
