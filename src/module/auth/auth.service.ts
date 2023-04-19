@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   AuthenticationDetails,
   CognitoUser,
@@ -20,11 +19,11 @@ export class AuthService {
   ) {
     const UserPoolId =
       this.authConfig.userPoolId === undefined
-        ? 'us-east-1_ck6mzyfZw'
+        ? 'us-east-1_nn3NwIbde'
         : this.authConfig.userPoolId;
     const ClientId =
       this.authConfig.userPoolWebClientId === undefined
-        ? '4sft30kp12tbi35odvomnnevs7'
+        ? '6t0sm3rnchbmvppq13lu58nqho'
         : this.authConfig.userPoolWebClientId;
 
     const config = { UserPoolId, ClientId };
@@ -144,7 +143,7 @@ export class AuthService {
 
     return new Promise((resolve, reject) => {
       userCognito.confirmPassword(confirmationCode, newPassword, {
-        onSuccess: () => {
+        onSuccess: async () => {
           resolve({ status: 'success' });
         },
         onFailure: (err) => {

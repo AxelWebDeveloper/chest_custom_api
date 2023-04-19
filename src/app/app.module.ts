@@ -1,37 +1,33 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
-import { ConfigModule } from '@nestjs/config';
-
 import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { InjectUser } from 'src/middlewares/injectUser';
 import { AuthModule } from 'src/module/auth/auth.module';
 import { JwtStrategy } from 'src/module/auth/jwt.strategy';
 import { UsersModule } from 'src/module/users/users.module';
-import configuration from 'src/config/configuration';
+import { GamesModule } from 'src/module/games/games.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [configuration],
-      envFilePath: ['.env'],
-    }),
-    TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        type: 'mysql',
-        host: process.env.TYPEORM_HOST,
-        port: parseInt(process.env.TYPEORM_PORT) || 3306,
-        username: process.env.TYPEORM_USERNAME,
-        password: process.env.TYPEORM_PASSWORD,
-        database: process.env.TYPEORM_DATABASE,
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: false,
-      }),
+    // ConfigModule.forRoot({
+    //   load: [configuration],
+    //   envFilePath: ['.env'],
+    // }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 1615,
+      username: 'test_user_chest',
+      password: 'chest',
+      database: 'local_chest_db',
+      entities: [__dirname + '/../**/*.entity.js'],
+      synchronize: true,
     }),
     UsersModule,
     AuthModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy, RolesGuard],
