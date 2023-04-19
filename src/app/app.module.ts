@@ -7,7 +7,10 @@ import { InjectUser } from 'src/middlewares/injectUser';
 import { AuthModule } from 'src/module/auth/auth.module';
 import { JwtStrategy } from 'src/module/auth/jwt.strategy';
 import { UsersModule } from 'src/module/users/users.module';
+import configuration from 'src/config/configuration';
+import { SocketModule } from '../socket/socket.module';
 import { GamesModule } from 'src/module/games/games.module';
+
 
 @Module({
   imports: [
@@ -27,7 +30,9 @@ import { GamesModule } from 'src/module/games/games.module';
     }),
     UsersModule,
     AuthModule,
+    SocketModule,
     GamesModule,
+
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy, RolesGuard],
