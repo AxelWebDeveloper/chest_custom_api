@@ -3,11 +3,14 @@ import { Game } from 'src/module/games/entities/game.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity,
-  OneToMany,
+  Entity, JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany, OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  UpdateDateColumn
+} from "typeorm";
 import * as rolesEnum from '../../enum/roles.enum';
 
 @Entity({ name: 'user' })
@@ -47,6 +50,7 @@ export class User {
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   public createdAt: Date;
 
-  @OneToMany(() => Game, (games) => games.user)
-  games?: Game[];
+  @OneToOne(() => Game)
+  @JoinColumn()
+  game: Game;
 }

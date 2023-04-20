@@ -6,8 +6,8 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io-client';
-import { GamesService } from '../games.service';
-import { CreateGameDto } from '../dto/create-game.dto';
+import { GamesService } from '../module/games/games.service';
+import { CreateGameDto } from '../module/games/dto/create-game.dto';
 
 @WebSocketGateway({
   cors: {
@@ -24,7 +24,7 @@ export class GamesGateway {
   async createGame(client: Socket, @MessageBody() data: CreateGameDto) {
     try {
       const game = await this.gameService.create(data);
-      this.server.emit('createGame', game);
+      this.server.emit('gameCreated', game);
     } catch (err) {
       client.emit('createGameError', { message: err.message });
     }

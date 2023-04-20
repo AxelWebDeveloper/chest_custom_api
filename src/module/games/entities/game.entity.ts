@@ -8,9 +8,11 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
-} from 'typeorm';
+  ManyToMany,
+  JoinTable, OneToMany, OneToOne
+} from "typeorm";
 
-@Entity({ name: 'user' })
+@Entity({ name: 'game' })
 export class Game {
   @PrimaryGeneratedColumn({ name: 'id' })
   public id: number;
@@ -27,15 +29,13 @@ export class Game {
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   public createdAt: Date;
 
-  @ApiProperty({ default: 1, nullable: true })
-  @Column({ name: 'userId', nullable: true })
-  public userId: number;
+  @OneToOne(() => User)
+  player1: User;
+
+  @OneToOne(() => User)
+  player2: User;
 
   @ApiProperty({ default: 1, nullable: true })
   @Column({ name: 'isOpen', nullable: true })
   public isOpen: number;
-
-  @ManyToOne(() => User, (user) => user.games)
-  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  user?: User;
 }
