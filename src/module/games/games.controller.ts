@@ -5,8 +5,8 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
-} from '@nestjs/common';
+  Delete, NotFoundException
+} from "@nestjs/common";
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
@@ -28,6 +28,15 @@ export class GamesController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gamesService.findOne(+id);
+  }
+
+  @Get('/uuid/:uuid')
+  async findByUuid(@Param('uuid') uuid: string) {
+    const game = await this.gamesService.findByUuid(uuid);
+    if (!game) {
+      throw new NotFoundException(`Game '${uuid}' not found`);
+    }
+    return game;
   }
 
   @Patch(':id')

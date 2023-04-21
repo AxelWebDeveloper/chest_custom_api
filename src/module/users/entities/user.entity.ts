@@ -3,14 +3,11 @@ import { Game } from 'src/module/games/entities/game.entity';
 import {
   Column,
   CreateDateColumn,
-  Entity, JoinColumn,
-  JoinTable,
+  Entity,
   ManyToMany,
-  ManyToOne,
-  OneToMany, OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
-} from "typeorm";
+  UpdateDateColumn,
+} from 'typeorm';
 import * as rolesEnum from '../../enum/roles.enum';
 
 @Entity({ name: 'user' })
@@ -46,11 +43,10 @@ export class User {
   @UpdateDateColumn({ name: 'updatedAt', nullable: true })
   public updatedAt: Date;
 
+  @ManyToMany(() => Game, (game) => game.players)
+  public games: Game[];
+
   @ApiProperty({ default: 'jean' })
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   public createdAt: Date;
-
-  @OneToOne(() => Game)
-  @JoinColumn()
-  game: Game;
 }

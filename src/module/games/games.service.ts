@@ -22,6 +22,7 @@ export class GamesService {
   findOne(id: number) {
     return this.gameRepository.findOne({
       where: { id },
+      relations: ['players'],
     });
   }
 
@@ -31,5 +32,9 @@ export class GamesService {
 
   remove(id: number) {
     return this.gameRepository.delete(id);
+  }
+
+  async findByUuid(uuid: string) {
+    return this.gameRepository.findOne({ where: { uuid } });
   }
 }
