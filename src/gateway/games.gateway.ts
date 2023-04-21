@@ -32,6 +32,8 @@ export class GamesGateway {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Game)
+    private readonly gameRepository: Repository<Game>,
     private readonly gameService: GamesService,
     private readonly userService: UsersService,
   ) {}
@@ -60,15 +62,25 @@ export class GamesGateway {
       return this.server.emit('joinGameError', { message: 'Game not found' });
     }
 
-    console.log(joinData.user);
     await this.userRepository
       .createQueryBuilder()
       .relation(Game, 'players')
       .of(game)
       .add(joinData.user);
 
+    await this.gameRepository
+      .createQueryBuilder()
+      .update({ isOpen: false })
+      .where('id = :id', { id: joinData.game.id })
+      .execute();
+
     const updatedGame = await this.gameService.findOne(joinData.game.id);
     this.server.emit('gameUpdated', updatedGame);
     this.server.emit('playerJoined', { game: game, user: joinData.user });
+  }
+
+  @SubscribeMessage('move')
+  handleMove(socket: Socket, payload: { from: string; to: string }) {
+    this.server.emit('moveDone', payload);
   }
 }

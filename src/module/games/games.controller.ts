@@ -25,6 +25,11 @@ export class GamesController {
     return this.gamesService.findAll();
   }
 
+  @Get('/opened')
+  findAllOpened() {
+    return this.gamesService.findAllOpened();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.gamesService.findOne(+id);
