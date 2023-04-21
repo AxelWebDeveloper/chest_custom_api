@@ -19,6 +19,10 @@ export class GamesService {
     return this.gameRepository.find();
   }
 
+  findAllOpened() {
+    return this.gameRepository.findBy({ isOpen: true });
+  }
+
   findOne(id: number) {
     return this.gameRepository.findOne({
       where: { id },
@@ -35,6 +39,9 @@ export class GamesService {
   }
 
   async findByUuid(uuid: string) {
-    return this.gameRepository.findOne({ where: { uuid } });
+    return this.gameRepository.findOne({
+      where: { uuid },
+      relations: ['players'],
+    });
   }
 }
