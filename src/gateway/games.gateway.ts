@@ -1,14 +1,19 @@
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server } from "socket.io";
-import { Socket } from "socket.io-client";
-import { GamesService } from "../module/games/games.service";
-import { CreateGameDto } from "../module/games/dto/create-game.dto";
-import { UsersService } from "../module/users/users.service";
-import { User } from "../module/users/entities/user.entity";
-import { CreateGameGatewayDto } from "../module/games/dto/create-game-gateway.dto";
-import { Game } from "../module/games/entities/game.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Server } from 'socket.io';
+import { Socket } from 'socket.io-client';
+import { GamesService } from '../module/games/games.service';
+import { CreateGameDto } from '../module/games/dto/create-game.dto';
+import { UsersService } from '../module/users/users.service';
+import { User } from '../module/users/entities/user.entity';
+import { CreateGameGatewayDto } from '../module/games/dto/create-game-gateway.dto';
+import { Game } from '../module/games/entities/game.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 interface joinGameDto {
   game: Game;
@@ -25,6 +30,8 @@ export class GamesGateway {
   server: Server;
 
   constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly gameService: GamesService,
     private readonly userService: UsersService,
   ) {}
@@ -52,11 +59,15 @@ export class GamesGateway {
     if (!game) {
       return this.server.emit('joinGameError', { message: 'Game not found' });
     }
-    console.log('game', game.players);
-    game.players = [joinData.user];
-    game.isOpen = false;
-    delete game.id;
-    const updatedGame = await this.gameService.update(joinData.game.id, game);
+
+    console.log(joinData.user);
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(Game, 'players')
+      .of(game)
+      .add(joinData.user);
+
+    const updatedGame = await this.gameService.findOne(joinData.game.id);
     this.server.emit('gameUpdated', updatedGame);
     this.server.emit('playerJoined', { game: game, user: joinData.user });
   }
