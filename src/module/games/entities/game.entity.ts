@@ -8,12 +8,19 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  OneToOne,
 } from 'typeorm';
 
-@Entity({ name: 'user' })
+@Entity({ name: 'game' })
 export class Game {
   @PrimaryGeneratedColumn({ name: 'id' })
   public id: number;
+
+  @Column({ name: 'uuid' })
+  public uuid: string;
 
   @ApiProperty({ default: '8765432' })
   @Column({ name: 'name', nullable: true })
@@ -27,15 +34,11 @@ export class Game {
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   public createdAt: Date;
 
-  @ApiProperty({ default: 1, nullable: true })
-  @Column({ name: 'userId', nullable: true })
-  public userId: number;
+  @ManyToMany(() => User, (user) => user.games, )
+  @JoinTable()
+  public players: User[];
 
   @ApiProperty({ default: 1, nullable: true })
-  @Column({ name: 'isOpen', nullable: true })
-  public isOpen: number;
-
-  @ManyToOne(() => User, (user) => user.games)
-  @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-  user?: User;
+  @Column()
+  public isOpen: boolean;
 }

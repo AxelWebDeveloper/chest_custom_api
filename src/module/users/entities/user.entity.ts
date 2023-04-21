@@ -4,7 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -43,10 +43,10 @@ export class User {
   @UpdateDateColumn({ name: 'updatedAt', nullable: true })
   public updatedAt: Date;
 
+  @ManyToMany(() => Game, (game) => game.players)
+  public games: Game[];
+
   @ApiProperty({ default: 'jean' })
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   public createdAt: Date;
-
-  @OneToMany(() => Game, (games) => games.user)
-  games?: Game[];
 }
