@@ -7,7 +7,6 @@ import {
 import { Server } from 'socket.io';
 import { Socket } from 'socket.io-client';
 import { GamesService } from '../module/games/games.service';
-import { CreateGameDto } from '../module/games/dto/create-game.dto';
 import { UsersService } from '../module/users/users.service';
 import { User } from '../module/users/entities/user.entity';
 import { CreateGameGatewayDto } from '../module/games/dto/create-game-gateway.dto';

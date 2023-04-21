@@ -6,12 +6,8 @@ import {
   Column,
   UpdateDateColumn,
   CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
   ManyToMany,
   JoinTable,
-  OneToMany,
-  OneToOne,
 } from 'typeorm';
 
 @Entity({ name: 'game' })
@@ -34,7 +30,7 @@ export class Game {
   @CreateDateColumn({ name: 'createdAt', nullable: true })
   public createdAt: Date;
 
-  @ManyToMany(() => User, (user) => user.games, )
+  @ManyToMany(() => User, (user) => user.games)
   @JoinTable()
   public players: User[];
 
