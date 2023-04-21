@@ -39,14 +39,13 @@ export class GamesGateway {
   @SubscribeMessage('createGame')
   async createGame(client: Socket, @MessageBody() data: CreateGameGatewayDto) {
     try {
-      const player = await this.userService.findOne(data.user.id);
-      const newData = new Game();
+      const player: User = await this.userService.findOne(data.user.id);
+      const newData: Game = new Game();
       newData.name = data.name;
       newData.isOpen = true;
       newData.uuid = data.uuid;
       newData.players = [player];
-      console.log(newData);
-      const game = await this.gameService.create(newData);
+      const game: Game = await this.gameService.create(newData);
       this.server.emit('gameCreated', game);
     } catch (err) {
       console.error(err);
@@ -56,7 +55,7 @@ export class GamesGateway {
 
   @SubscribeMessage('joinGame')
   async joinGame(client: Socket, joinData: joinGameDto) {
-    const game = await this.gameService.findOne(joinData.game.id);
+    const game: Game = await this.gameService.findOne(joinData.game.id);
     if (!game) {
       return this.server.emit('joinGameError', { message: 'Game not found' });
     }
@@ -81,5 +80,10 @@ export class GamesGateway {
   @SubscribeMessage('move')
   handleMove(socket: Socket, payload: { from: string; to: string }) {
     this.server.emit('moveDone', payload);
+  }
+
+  @SubscribeMessage('message')
+  handleMessage(@MessageBody() message: { message: string; user: User }): void {
+    this.server.emit('message', message);
   }
 }
